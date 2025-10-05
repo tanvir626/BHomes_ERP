@@ -16,12 +16,15 @@ namespace Bhomes_ERP.Repository.Interface
         #region Insert Functions
         public bool Save_to_HR_Department(VM_Department model);
         public bool Save_to_HR_SubDepartment(VM_SubDepartment model);
+        public bool Save_to_HR_Shift(VM_Shift model);
         #endregion
 
 
         #region Update Functions
         public bool Update_to_HR_Department(VM_Department model);
         public bool Update_to_HR_Sub_Department(VM_SubDepartment model);
+        public bool Update_to_HR_Shift(VM_Shift model);
+        
         #endregion
 
 

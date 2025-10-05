@@ -13,6 +13,15 @@ namespace Bhomes_ERP.Repository.Implementation
     public class Im_HRConfig(IDapper con):IHRConfig
     {
 
+        #region Tools
+        private char status(string status)
+        {
+            if (status == "true")
+                return 'Y';
+            return 'N';
+        }
+        #endregion
+
         #region Department
         public List<VM_Department> Get_HR_Department()
         {
@@ -212,7 +221,6 @@ namespace Bhomes_ERP.Repository.Implementation
 
         public bool Update_to_HR_Sub_Department(VM_SubDepartment model)
         {
-            
             try
             {
                 using (var connection = new SqlConnection(con.Dappercon()))
@@ -245,18 +253,114 @@ namespace Bhomes_ERP.Repository.Implementation
             }
         }
 
-        private char status(string status)
-        {
-            if (status == "true")
-                return 'Y';
-            return 'N';
-        }
-
-
         #endregion
 
 
+        #region Shift
+        public bool Save_to_HR_Shift(VM_Shift model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    string sql = @"
+                                    INSERT INTO [CoreDB].[dbo].[HR_Shift]
+                                    (
+                                        ShiftName,
+                                        Weekend1,
+                                        StartTime,
+                                        EndTime,
+                                        LateAllowed,
+                                        Status,
+                                        CreatedBy,
+                                        CreateDate,
+                                        EditedBy                           
 
+                                    )
+                                    SELECT 
+                                        @ShiftName,
+                                        @Weekend1,
+                                        @StartTime,
+                                        @EndTime,
+                                        @LateAllowed,
+                                        @Status,
+                                        @CreatedBy,
+                                        @CreateDate,
+                                        @EditedBy
+                                    WHERE NOT EXISTS (
+                                        SELECT 1
+                                        FROM [CoreDB].[dbo].[HR_Shift]
+                                        WHERE  StartTime =  @StartTime and EndTime = @EndTime
+                                    );";
+
+
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        model.ShiftName,
+                        model.Weekend1,
+                        model.StartTime,
+                        model.EndTime,
+                        model.LateAllowed,
+                        Status="Y",
+                        CreatedBy = con.GetLoggedUserName(),
+                        CreateDate = DateTime.Now,
+                        EditedBy = "Fresh",
+                        
+                    });
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public bool Update_to_HR_Shift(VM_Shift model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    string sql = @"
+                                    UPDATE [CoreDB].[dbo].[HR_Shift]
+                                    SET
+                                        ShiftName=@ShiftName,
+                                        Weekend1=@Weekend1,
+                                        StartTime=@StartTime,
+                                        EndTime=@EndTime,
+                                        LateAllowed=@LateAllowed,
+                                        Status = @Status,
+                                        EditedBy = @EditedBy,
+                                        EditDate = @EditDate
+                                        where ShiftID=@ShiftID;
+                                ";
+                    // Dapper parameter binding
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        model.ShiftName,
+                        model.Weekend1,
+                        model.StartTime,
+                        model.EndTime,
+                        model.LateAllowed,
+                        Status= status(model.Status),
+                        EditedBy = con.GetLoggedUserName(),
+                        EditDate = DateTime.Now,
+                        model.ShiftID
+                    });
+                    if (rowsAffected > 0)
+                        return true;
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        #endregion
 
 
 

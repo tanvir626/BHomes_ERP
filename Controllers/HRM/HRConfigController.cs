@@ -4,6 +4,7 @@ using Bhomes_ERP.Repository.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Drawing;
 using System.Net.Http;
 
@@ -122,9 +123,49 @@ namespace Bhomes_ERP.Controllers.HRM
         private readonly string HR_Shift = "HR_Shift";
         public IActionResult Shift()
         {
+            var daysOfWeek = Enum.GetNames(typeof(DayOfWeek)).ToList();
+            ViewBag.Day = daysOfWeek;
             ViewBag.Data = con.ShowTable(HR_Shift);
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create_Shift(VM_Shift model)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(model.ShiftName))
+                {
+                    bool status = hr.Save_to_HR_Shift(model);
+                    return Json(new { info = status });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return RedirectToAction("Error500");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update_Shift(VM_Shift model)
+        {
+            try
+            {
+                bool status = hr.Update_to_HR_Shift(model);
+                return Json(new { info = status });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return RedirectToAction("Error500");
+        }
+
+       
+
         #endregion
     }
 }
