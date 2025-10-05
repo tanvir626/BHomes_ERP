@@ -1,0 +1,342 @@
+﻿@model Bhomes_ERP.Models.VM_Model.VM_PageCrud
+<div class="card" style="overflow:auto;">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-6 text-start">
+                <h2>Page</h2>
+            </div>
+            <div class="col-6 text-end">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Add Page
+                </button>
+            </div>
+        </div>
+       
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped border border-2" id="myTable" >
+                    <thead class="border border-2">
+                        <tr>
+                            <th scope="col" class="text-center">Id</th>
+                            <th scope="col" class="text-center">Role</th>
+                            <th scope="col" class="text-center">Controller</th>
+                            <th scope="col" class="text-center">Method</th>
+                            <th scope="col" class="text-center">View</th>
+                            <th scope="col" class="text-center">Create</th>
+                            <th scope="col" class="text-center">Edit</th>
+                            <th scope="col" class="text-center">Delete</th>
+                            <th scope="col" class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var d in ViewBag.Data)
+                        {
+                            <tr>
+                                <td class="text-center">@d.Id</td>
+                                <td class="text-center">@d.RoleName</td>
+                                <td class ="text-center">@d.Controller</td>
+                                <td class ="text-center">@d.Method</td>
+                                <td class="text-center">@d.CanView</td>
+                                <td class="text-center">@d.CanCreate</td>
+                                <td class="text-center">@d.CanEdit</td>
+                                <td class="text-center">@d.CanDelete</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-primary" onclick="return ShowindividualRow('RolePermissions','Id',@d.Id)">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="return Delete('RolePermissions','Id',@d.Id)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--Add Page Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                 <form asp-action="Create" method="post" id="pageForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Page</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                   
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="CategoriesID" class="form-label"></label>
+                            <select asp-for="CategoriesID" class="form-select" asp-items="ViewBag.Controller">
+                                <option value="">-- Select Controller --</option>
+                            </select>
+                            <span asp-validation-for="SubCategoryId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SubCategoryId" class="form-label"></label>
+                            <select asp-for="SubCategoryId" class="form-select" asp-items="ViewBag.Method">
+                                <option value="">-- Select Action --</option>
+                            </select>
+                            <span asp-validation-for="SubCategoryId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="RoleId" class="form-label"></label>
+                            <select asp-for="RoleId" class="form-select" asp-items="ViewBag.RoleId">
+                                <option value="">-- Select Role --</option>
+                            </select>
+                            <span asp-validation-for="RoleId" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input asp-for="CanView" class="form-check-input" type="checkbox" />
+                                    <label asp-for="CanView" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input asp-for="CanCreate" class="form-check-input" type="checkbox" />
+                                    <label asp-for="CanCreate" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input asp-for="CanDelete" class="form-check-input" type="checkbox" />
+                                    <label asp-for="CanDelete" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input asp-for="CanEdit" class="form-check-input" type="checkbox" />
+                                    <label asp-for="CanEdit" class="form-check-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                                            
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success"> <i class="bi bi-plus-circle"></i> Create </button>
+                </div>
+               </form>
+            </div>
+        </div>
+    </div>
+    <!--End Page Modal-->
+
+    <!--Edit Page Modal-->
+    <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="UpdatePage" method="post" id="EditpageForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EditModalLabel">Edit Page</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <input id="HiddenPageId" name="Id" class="form-control" />
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-control">
+                                    <label class="form-check-label">Role:</label>
+                                    <input id="EditRole" class="form-control" type="Text" />                   
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-control">
+                                <label class="form-check-label">Page:</label>
+                                <input id="EditPageLink" class="form-control" type="Text" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input asp-for="CanView" id="EditCanView" class="form-check-input" type="checkbox" />
+                                    <label asp-for="CanView" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input asp-for="CanCreate" id="EditCanCreate" class="form-check-input" type="checkbox" />
+                                    <label asp-for="CanCreate" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input asp-for="CanDelete" id="EditCanDelete" class="form-check-input" type="checkbox" />
+                                    <label asp-for="CanDelete" class="form-check-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input asp-for="CanEdit" id="EditCanEdit" class="form-check-input" type="checkbox" />
+                                    <label asp-for="CanEdit" class="form-check-label"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning"> <i class="bi bi-plus-circle"></i> Update </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Edit Page Modal-->
+</div>
+@section CustomJS {
+    <script>
+        $(document).ready(function () {
+            // InsertPage
+            $("#pageForm").on("submit", function (e) {
+                e.preventDefault(); // prevent normal form submit
+                $("#loadingSpinner").show(); // show loader
+
+                $.ajax({
+                    url: '@Url.Action("Create", "Page")', // Controller Action
+                    type: "POST",
+                    data: $(this).serialize(), // send form data
+                    success: function (response) {
+                        if(response.info)
+                        {
+                        toastr.success("Successfully Done");
+                        $("#loadingSpinner").hide(); // hide loader
+                        $('#exampleModal').modal('hide'); // close modal
+                         window.location.reload();                     
+                        }
+                        else
+                        {
+                             $('#exampleModal').modal('hide');
+                             $("#loadingSpinner").hide();
+                            toastr.error("Same Data Exists");
+                        }
+
+                    },
+                    error: function (xhr) {
+                        $("#loadingSpinner").hide();
+                        alert("Error occurred: " + xhr.responseText);
+                    }
+                });
+            });
+
+            //UpdatePage
+            $('#EditpageForm').submit(function(e) {
+            e.preventDefault(); // prevent page reload
+
+            var form = $(this);
+
+            $.ajax({
+                url: form.attr('action'), // UpdatePage action
+                type: 'POST',
+                data: form.serialize(),   // send all form data
+                success: function(response) {
+                    if (response.info) {
+                        $('#EditModal').modal('hide'); 
+
+                        toastr.success("Page updated successfully!");
+                         window.location.reload();
+
+                    } else {
+                         $('#EditModal').modal('hide');
+                        toastr.error(response.message || "Something went wrong!");
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error("Error occurred: " + xhr.responseText);
+                }
+            });
+        });
+
+
+
+
+        });
+
+        function ShowindividualRow(TableName, ColName, id) {
+            // Optional confirm if editing
+            if (!confirm("Are you sure you want to edit this row?"))
+                return;
+
+            ///e.preventDefault(); // prevent normal form submit
+            $("#loadingSpinner").show(); // show loader
+
+            $.ajax({
+                url: '@Url.Action("ShowIndivisualRow", "Page")',
+                type: "GET",
+                data: { TableName: TableName, ColName: ColName, id: id },
+                success: function (response) {
+                    $('#EditModal').modal('show');
+                    $("#loadingSpinner").hide();
+                    // Headers
+                    $('#EditRole').val(response.roleName);
+                    $('#EditPageLink').val(response.pageLink);
+                    $('#HiddenPageId').val(id);
+
+                  
+                    // ✅ Case 2: if row is an array
+                    if (Array.isArray(response.row) && response.row.length > 0) {
+                        var row = response.row[0]; // just take the first one
+                        $('#EditCanCreate').prop('checked', row.CanCreate);
+                        $('#EditCanView').prop('checked', row.CanView);
+                        $('#EditCanDelete').prop('checked', row.CanDelete);
+                        $('#EditCanEdit').prop('checked', row.CanEdit);
+                    }
+                     
+                },
+                error: function (xhr) {
+                    $("#loadingSpinner").hide();
+                    alert("Error occurred: " + xhr.responseText);
+                }
+            });
+        }
+
+
+
+        function Delete(TableName,ColName,id)
+        {
+            if (!confirm("Are you sure you want to delete this row?")) 
+                return;     
+              
+            $("#loadingSpinner").show();
+            $.ajax({
+                    url: '@Url.Action("Delete", "Page")',
+                    type: "POST",
+                    data: { TableName:TableName,ColName:ColName,id: id }, 
+                    success: function (response) {
+                        if(response.info)
+                        {
+                            toastr.success("Successfully Deleted");
+                            $("#loadingSpinner").hide(); 
+                            window.location.reload()
+                        }
+                        else
+                        {
+                             $("#loadingSpinner").hide();
+                            toastr.error("Something Went Wrong");
+                        }
+
+                    },
+                    error: function (xhr) {
+                        $("#loadingSpinner").hide();
+                        alert("Error occurred: " + xhr.responseText);
+                    }
+                });
+        }
+
+    </script>
+}
+

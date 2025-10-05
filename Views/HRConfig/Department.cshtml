@@ -1,0 +1,204 @@
+﻿@model Bhomes_ERP.Models.VM_Model.VM_Department;     
+
+<div class="card" style="overflow:auto;">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-6 text-start">
+                <h2>Department</h2>
+            </div>
+            <div class="col-6 text-end">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Add Department
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped border border-2" id="myTable">
+                    <thead class="border border-2">
+                        <tr>
+                            <th scope="col" class="text-center">Sl</th>
+                            <th scope="col" class="text-center">Code</th>
+                            <th scope="col" class="text-center">Department</th>
+                            <th scope="col" class="text-center">Status</th>
+                            <th scope="col" class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{var sl = 1;}
+                        @foreach (var d in ViewBag.Data)
+                        {
+                            <tr>
+                                <td class="text-center">@sl</td>
+                                <td class="text-center">@d.HR_DeptCode</td>
+                                <td class="text-center">@d.HR_DeptName</td>
+                                <td class="text-center">@d.Status</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-primary" onclick="return ShowindividualRow('HR_Department','HR_DeptCode',@d.HR_DeptCode)">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="return Delete('HR_Department','HR_DeptCode',@d.HR_DeptCode)">Delete</button>
+                                </td>
+                            </tr>
+                            sl++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--Add Department Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="Create_Department" asp-controller="HRConfig" class="ajax-form" method="post" id="pageForm"
+                  data-action="@Url.Action("Create_Department", "HRConfig")">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Page</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="HR_DeptName" class="form-label"></label>
+                            <input type="text" asp-for="HR_DeptName" class="form-control" />
+                            <span asp-validation-for="HR_DeptName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success"> <i class="bi bi-plus-circle"></i> Create </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--End Department Modal-->
+
+    <!--Edit Department Modal-->
+    <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="EditDepartmentForm" class="ajax-form"
+                      method="post"
+                      action="@Url.Action("UpdateDepartment", "HRConfig")">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EditModalLabel">Edit Page</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input id="HiddenPageId" name="Id" class="form-control" style="display:none" />
+                        <div class="row g-3 align-items-center">
+                          
+                            <!-- Department Name -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="DeptCode" class="form-label fw-semibold">Department Code</label>
+                                    <input type="text" id="EditDeptCode" asp-for="HR_DeptCode" class="form-control shadow-sm" readonly />
+                                    <span asp-validation-for="HR_DeptCode" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <!-- Department Name -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="EditDeptName" class="form-label fw-semibold">Department Name</label>
+                                    <input type="text" id="EditDeptName" asp-for="HR_DeptName" class="form-control shadow-sm" placeholder="Enter Department Name" />
+                                    <span asp-validation-for="HR_DeptName" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Status Checkbox -->
+                            <div class="col-md-6 d-flex align-items-center">
+                                <div class="form-check mt-4">
+                                    <input asp-for="Status" id="EditDeptStatus" class="form-check-input" type="checkbox" />
+                                    <label for="EditDeptStatus" class="form-check-label fw-semibold">Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning"> <i class="bi bi-plus-circle"></i> Update </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Edit Page Modal-->
+</div>
+@section CustomJS {
+    <script>
+        $(document).ready(function () {
+
+            //UpdatePage
+            $('#EditDepartmentForm').on("submit", function (e) {
+                e.preventDefault();//prevent page reload
+                var form = $(this);
+
+                $.ajax({
+                    url: form.attr('action'), //UpdatePage action
+                    type: 'POST',
+                    data: form.serialize(),  // send all form data
+                    success: function (response) {
+                        if (response.info) {
+                            $('#EditModal').modal('hide');
+                            toastr.success("Department updated successfully!");
+                            window.location.reload();
+                        } else {
+                            $('#EditModal').modal('hide');
+                            toastr.error(response.message || "Something went wrong!");
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.error("Error occurred: " + xhr.responseText);
+                    }
+                });
+            });
+
+        });
+
+        // ShowIndividualRow
+        function ShowindividualRow(TableName, ColName, id) {
+            if (!confirm("Are you sure you want to edit this row?"))
+                return;
+
+            $("#loadingSpinner").show(); // show loader
+            $('#EditModal').modal('show'); // close modal
+            $.ajax({
+                url: '/Crud/ShowIndivisualDeptRow/',
+                type: "GET",
+                data: { TableName: TableName, ColName: ColName, id: id },
+                success: function (response) {
+                    $("#loadingSpinner").hide();
+
+                    if (response.row && response.row.length > 0) {
+                        var row = response.row[0];
+                        $('#EditModal').modal('show');
+                       $('#EditDeptCode').val(row.HR_DeptCode);
+                        $('#EditDeptName').val(row.HR_DeptName);
+                       $('#EditDeptStatus').prop('checked', row.Status === true || row.Status === "true" || row.Status === 1 || row.Status === "1");
+
+                    } else {
+                        alert("No data found!");
+                    }
+                },
+                error: function (xhr) {
+                    $("#loadingSpinner").hide();
+                    alert("Error occurred: " + xhr.responseText);
+                }
+            });
+        }
+       
+       
+    </script>
+}
+

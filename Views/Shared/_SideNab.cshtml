@@ -1,0 +1,107 @@
+﻿@using Bhomes_ERP.Repository.Interface
+@using Dapper
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Data.SqlClient
+@inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@inject IDapper con
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var userid = @user?.Id;
+    if (string.IsNullOrEmpty(userid))
+    {
+        // Redirect to another page
+        Context.Response.Redirect("/Account/Login");
+        return;
+    }
+
+
+<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+
+        @{
+            string Role;
+            using (var connection = new SqlConnection(con.Dappercon()))
+            {
+                // ✅ Get role of logged-in user
+                string sqlRole = @"
+        SELECT r.Name
+        FROM AspNetUserRoles ur
+        INNER JOIN AspNetRoles r ON r.Id = ur.RoleId
+        WHERE ur.UserId = @UserID
+        ";
+
+                var roleRow = connection.QuerySingleOrDefault(sqlRole, new { UserID = userid });
+                Role = roleRow.Name;
+
+                // ✅ Get menus and submenus for this user
+                string sqlMenu = @"
+        SELECT
+        ur.UserId,
+        r.Name AS Role,
+        c.Id AS MenuId,
+        c.CateName AS Menu,
+        s.Id AS SubMenuId,
+        s.SubCateName AS Submenu
+        FROM AspNetUserRoles ur
+        INNER JOIN AspNetRoles r ON r.Id = ur.RoleId
+        INNER JOIN RolePermissions rp ON rp.RoleId = r.Id
+        INNER JOIN Categories c ON c.Id = rp.CategoriesID
+        INNER JOIN SubCategories s ON s.Id = rp.SubCategoryId
+        WHERE ur.UserId = @UserID and rp.CanView=1
+        ";
+
+                var menuItems = connection.Query(sqlMenu, new { UserID = userid });
+
+                // ✅ Group by MenuId + Menu
+                var menuGroups = menuItems.GroupBy(m => new { m.MenuId, m.Menu });
+
+
+                if (string.IsNullOrEmpty(Role))
+                {
+                    Context.Response.Redirect("/Account/Login");
+                    return;
+                }
+                    
+
+                // ✅ Render only if user is in role
+            if (User.IsInRole(Role))
+            {
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        @foreach (var menuGroup in menuGroups)
+                        {
+                            var collapseId = "collapse_" + menuGroup.Key.MenuId;
+
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                @menuGroup.Key.Menu
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+
+                            <div class="collapse" id="@collapseId" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    @foreach (var sub in menuGroup)
+                                    {
+                                        <a class="nav-link" href="/@sub.Menu/@sub.Submenu/">@sub.Submenu</a>
+                                    }
+                                </nav>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        var roles = await UserManager.GetRolesAsync(user);
+                        <span>@user.UserName (@string.Join(", ", roles))</span>
+                    }
+                </div>
+            }
+        }
+    }
+</nav>
+}

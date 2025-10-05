@@ -1,0 +1,64 @@
+﻿@model Bhomes_ERP.Models.VM_Model.VM_SubDepartment;
+@{
+    ViewData["Title"] = "Shift";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card" style="overflow:auto;">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-6 text-start">
+                <h2>Shift</h2>
+            </div>
+            <div class="col-6 text-end">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Add Shift
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped border border-2" id="myTable">
+                    <thead class="border border-2">
+                        <tr>
+                            <th scope="col" class="text-center">Sl</th>
+                            <th scope="col" class="text-center">ShiftID</th>
+                            <th scope="col" class="text-center">ShiftCode</th>
+                            <th scope="col" class="text-center">ShiftName</th>
+                            <th scope="col" class="text-center">StartTime</th>
+                            <th scope="col" class="text-center">EndTime</th>
+                            <th scope="col" class="text-center">LateAllowed</th>
+                            <th scope="col" class="text-center">Weekend1</th>
+                            <th scope="col" class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var sl = 1;
+                        }
+                        @foreach (var d in ViewBag.Data)
+                        {
+                            <tr>
+                                <td class="text-center">@sl</td>
+                                <td class="text-center">@d.ShiftID</td>
+                                <td class="text-center">@d.ShiftCode</td>
+                                <td class="text-center">@d.ShiftName</td>
+                                <td class="text-center">@d.StartTime</td>
+                                <td class="text-center">@d.EndTime</td>
+                                <td class="text-center">@d.LateAllowed</td>
+                                <td class="text-center">@d.Weekend1</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-primary" onclick="return ShowindividualRow('HR_Shift','ShiftID',@d.ShiftID)">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="return Delete('HR_Shift','ShiftID',@d.ShiftID)">Delete</button>
+                                </td>
+                            </tr>
+                            sl++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
