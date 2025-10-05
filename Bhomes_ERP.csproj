@@ -11,11 +11,11 @@
     <PackageReference Include="bootstrap" Version="5.3.8" />
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="Dapper" Version="2.1.66" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.0-rc.1.24452.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0-rc.1.24452.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.0-rc.1.24452.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0-rc.1.24452.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0-rc.1.24452.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.0-rc.1.25458.5" />
   </ItemGroup>
 
