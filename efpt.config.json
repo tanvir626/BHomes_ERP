@@ -16,6 +16,10 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "[dbo].[HR_Designation]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[HR_Shift]",
          "ObjectType": 0
       }

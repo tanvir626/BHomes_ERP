@@ -347,7 +347,7 @@ namespace Bhomes_ERP.Repository.Implementation
                         Status= status(model.Status),
                         EditedBy = con.GetLoggedUserName(),
                         EditDate = DateTime.Now,
-                        model.ShiftID
+                        model.ShiftId
                     });
                     if (rowsAffected > 0)
                         return true;
@@ -362,6 +362,88 @@ namespace Bhomes_ERP.Repository.Implementation
         }
         #endregion
 
+        #region Designation
+        public bool Save_to_HR_Designation(VM_Designation model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    string sql = @"
+                                    INSERT INTO [CoreDB].[dbo].[HR_Designation]
+                                    (
+                                        DesignationTitle,
+                                        Status,                                        
+                                        CreatedBy,
+                                        CreateDate,
+                                        EditedBy
+                                    )
+                                    SELECT 
+                                       @DesignationTitle,
+                                       @Status,                                        
+                                        @CreatedBy,
+                                        @CreateDate,
+                                        @EditedBy
+                                    WHERE NOT EXISTS (
+                                        SELECT 1
+                                        FROM [CoreDB].[dbo].[HR_Designation]
+                                        WHERE  DesignationTitle =  @DesignationTitle
+                                    );";
+
+
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        model.DesignationTitle,
+                        Status = "Y",
+                        CreatedBy = con.GetLoggedUserName(),
+                        CreateDate = DateTime.Now,
+                        EditedBy = "Fresh",
+
+                    });
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public bool Update_to_HR_Designation(VM_Designation model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    string sql = @"
+                                    UPDATE [CoreDB].[dbo].[HR_Designation]
+                                    SET                                        
+                                        Status = @Status,
+                                        EditedBy = @EditedBy,
+                                        EditDate = @EditDate
+                                        where DesigID=@DesigID;
+                                ";
+                    // Dapper parameter binding
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        Status = status(model.Status),
+                        EditedBy = con.GetLoggedUserName(),
+                        EditDate = DateTime.Now,
+                        model.DesigId
+                    });
+                    if (rowsAffected > 0)
+                        return true;
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        #endregion
 
 
     }

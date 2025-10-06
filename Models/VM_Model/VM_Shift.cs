@@ -7,19 +7,13 @@ namespace Bhomes_ERP.Models.VM_Model;
 
 public partial class VM_Shift
 {
-    public int ShiftID { get; set; }
+    public int ShiftId { get; set; }
 
     public string ShiftName { get; set; }
 
     public string Weekend1 { get; set; }
 
     public string Weekend2 { get; set; }
-
-    public TimeSpan StartTime { get; set; }
-
-    public TimeSpan EndTime { get; set; }
-
-    public TimeSpan? LateAllowed { get; set; }
 
     public string Status { get; set; }
 
@@ -30,4 +24,10 @@ public partial class VM_Shift
     public string CreatedBy { get; set; }
 
     public string EditedBy { get; set; }
+
+    public TimeOnly? StartTime { get; set; }
+
+    public TimeOnly? EndTime { get; set; }
+
+    public TimeOnly? LateAllowed { get; set; }
 }
