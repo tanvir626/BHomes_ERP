@@ -527,5 +527,89 @@ namespace Bhomes_ERP.Repository.Implementation
             }
         }
         #endregion
+
+        #region Education Type        
+        public bool Save_to_HR_EmpEducationType(VM_EmpEducationType model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    string sql = @"
+                                    INSERT INTO [CoreDB].[dbo].[HR_EmpEducationType]
+                                    (
+                                        EducationType,
+                                        Status,
+                                        CreatedBy,
+                                        CreateDate,
+                                        EditedBy
+                                    )
+                                    SELECT 
+                                        @EducationType,
+                                        @Status,
+                                        @CreatedBy,
+                                        @CreateDate,
+                                        @EditedBy
+                                    WHERE NOT EXISTS (
+                                        SELECT 1
+                                        FROM [CoreDB].[dbo].[HR_EmpEducationType]
+                                        WHERE  EducationType =  @EducationType
+                                    );";
+
+
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        model.EducationType,
+                        Status = "Y",
+                        CreatedBy = con.GetLoggedUserName(),
+                        CreateDate = DateTime.Now,
+                        EditedBy = "Fresh",
+                        model.EmpEduTypeId
+
+                    });
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public bool Update_to_HR_EmpEducationType(VM_EmpEducationType model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    string sql = @"
+                                    UPDATE [CoreDB].[dbo].[HR_EmpEducationType]
+                                    SET                                        
+                                        Status = @Status,
+                                        EditedBy = @EditedBy,
+                                        EditDate = @EditDate
+                                        where EmpEduTypeID=@EmpEduTypeID;
+                                ";
+                    // Dapper parameter binding
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        Status = status(model.Status),
+                        EditedBy = con.GetLoggedUserName(),
+                        EditDate = DateTime.Now,
+                        model.EmpEduTypeId
+                    });
+                    if (rowsAffected > 0)
+                        return true;
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        #endregion
     }
 }

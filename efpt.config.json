@@ -20,6 +20,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[HR_EmpEducationType]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[HR_EmployeeType]",
          "ObjectType": 0
       },

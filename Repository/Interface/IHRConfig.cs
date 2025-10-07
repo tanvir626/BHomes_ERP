@@ -19,6 +19,7 @@ namespace Bhomes_ERP.Repository.Interface
         public bool Save_to_HR_Shift(VM_Shift model);
         public bool Save_to_HR_Designation(VM_Designation model);
         public bool Save_to_HR_EmployeeType(VM_EmployeeType model);
+        public bool Save_to_HR_EmpEducationType(VM_EmpEducationType model);
         #endregion
 
 
@@ -28,6 +29,7 @@ namespace Bhomes_ERP.Repository.Interface
         public bool Update_to_HR_Shift(VM_Shift model);
         public bool Update_to_HR_Designation(VM_Designation model);
         public bool Update_to_HR_EmployeeType(VM_EmployeeType model);
+        public bool Update_to_HR_EmpEducationType(VM_EmpEducationType model);
         #endregion
 
 

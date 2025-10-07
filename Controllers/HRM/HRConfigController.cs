@@ -212,7 +212,7 @@ namespace Bhomes_ERP.Controllers.HRM
         }
         #endregion
 
-        #region EMployee Type
+        #region Employee Type
         private readonly string TableEmployeeType = "HR_EmployeeType";
         [Route("/HRConfig/Employee Type")]
         public IActionResult EmployeeType()
@@ -247,6 +247,51 @@ namespace Bhomes_ERP.Controllers.HRM
             try
             {
                 bool status = hr.Update_to_HR_EmployeeType(model);
+                return Json(new { info = status });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return RedirectToAction("Error500");
+        }
+        #endregion
+
+        #region Education Type
+        private readonly string TableEducationType = "HR_EmpEducationType";
+        [Route("/HRConfig/Education Type")]
+        public IActionResult EducationType()
+        {
+            ViewBag.Data = con.ShowTable(TableEducationType);
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create_EmpEducationType(VM_EmpEducationType model)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(model.EmpEduTypeId.ToString()))
+                {
+                    bool status = hr.Save_to_HR_EmpEducationType(model);
+                    return Json(new { info = status });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return RedirectToAction("Error500");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update_EmpEducationType(VM_EmpEducationType model)
+        {
+            try
+            {
+                bool status = hr.Update_to_HR_EmpEducationType(model);
                 return Json(new { info = status });
             }
             catch (Exception ex)

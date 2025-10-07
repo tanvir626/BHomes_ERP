@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace Bhomes_ERP.Models.VM_Model;
 
-public partial class VM_EmployeeType
+public partial class VM_EmpEducationType
 {
-    public int EmpTypeId { get; set; }
+    public int EmpEduTypeId { get; set; }
 
-    public string EmployeeType { get; set; }
+    public string EducationType { get; set; }
 
     public string Status { get; set; }
 
