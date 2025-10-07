@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Build.Framework;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Newtonsoft.Json.Linq;
 
@@ -599,6 +600,58 @@ namespace Bhomes_ERP.Repository.Implementation
                         EditDate = DateTime.Now,
                         model.EmpEduTypeId
                     });
+                    if (rowsAffected > 0)
+                        return true;
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        #endregion
+
+        #region Salary Matrix
+        public bool Update_to_HR_SalaryMatrix(VM_SalaryMatrix model)
+        {
+            
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    const int matrixid = 1;
+                    string sql = @"
+                                    UPDATE [CoreDB].[dbo].[HR_SalaryMatrix]
+                                    SET 
+                                        BasicPercent           = @BasicPercent,
+                                        HouseRentPercent       = @HouseRentPercent,
+                                        MedicalAllowPercent    = @MedicalAllowPercent,
+                                        ConveyanceAllowPercent = @ConveyanceAllowPercent,
+                                        EntertainAllowPercent  = @EntertainAllowPercent,
+                                        StampDeduction         = @StampDeduction,
+                                        PfemployeePercent      = @PfemployeePercent,
+                                        EditedBy               = @EditedBy,
+                                        EditDate               = @EditDate
+                                    WHERE 
+                                        SalaryMatrixID         = @SalaryMatrixID;
+                                ";
+
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        model.BasicPercent,
+                        model.HouseRentPercent,
+                        model.MedicalAllowPercent,
+                        model.ConveyanceAllowPercent,
+                        model.EntertainAllowPercent,
+                        model.StampDeduction,
+                        model.PfemployeePercent,
+                        EditedBy = con.GetLoggedUserName(),
+                        EditDate = DateTime.Now,
+                        @SalaryMatrixID=matrixid
+                    });
+
                     if (rowsAffected > 0)
                         return true;
                     return false;

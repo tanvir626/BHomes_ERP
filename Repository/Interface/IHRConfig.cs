@@ -30,6 +30,8 @@ namespace Bhomes_ERP.Repository.Interface
         public bool Update_to_HR_Designation(VM_Designation model);
         public bool Update_to_HR_EmployeeType(VM_EmployeeType model);
         public bool Update_to_HR_EmpEducationType(VM_EmpEducationType model);
+        public bool Update_to_HR_SalaryMatrix(VM_SalaryMatrix model);
+     
         #endregion
 
 

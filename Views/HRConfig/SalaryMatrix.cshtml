@@ -1,0 +1,129 @@
+﻿@model Bhomes_ERP.Models.VM_Model.VM_SalaryMatrix;
+@{
+    ViewData["Title"] = "SalaryMatrix";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section SalaryMatrixCss {
+    <style>
+        body {
+            background-color: #f2f6fa;
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: #3c8dbc;
+            color: white;
+            font-weight: 600;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .btn-custom {
+            background-color: #007b9e;
+            color: #fff;
+            font-weight: 600;
+        }
+
+            .btn-custom:hover {
+                background-color: #005f7f;
+            }
+    </style>
+}
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-cash-stack"></i> Salary Matrix
+            </div>
+            <div class="card-body">
+            <form asp-action="Update_SalaryMatrix" method="post" id="EditDepartmentForm">
+                @Html.AntiForgeryToken()
+                     @foreach (var d in ViewBag.Data)
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Basic Salary (%) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" asp-for="BasicPercent"  value="@d.BasicPercent">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">House Rent (%) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" asp-for="HouseRentPercent" value="@d.HouseRentPercent">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Medical Allowance (%) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" asp-for="MedicalAllowPercent" value="@d.MedicalAllowPercent" >
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Conveyance Allowance (%) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" asp-for="ConveyanceAllowPercent" value="@d.ConveyanceAllowPercent" >
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Entertainment Allowance (%) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" asp-for="EntertainAllowPercent"  value="@d.EntertainAllowPercent">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Stamp Charge <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" asp-for="StampDeduction" value="@d.StampDeduction" >
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">PF (%) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" asp-for="PfemployeePercent" value="@d.PFEmployeePercent" >
+                        </div>
+                    </div>
+                }
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-custom">
+                        <i class="bi bi-check2-circle"></i> SET
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@section CustomJS {
+    <script>
+        $(document).ready(function () {
+
+            // UpdatePage
+            $('#EditDepartmentForm').on("submit", function (e) {
+                e.preventDefault(); // prevent page reload
+                var form = $(this);
+
+                $.ajax({
+                    url: form.attr('action'), // UpdatePage action
+                    type: 'POST',
+                    data: form.serialize(),   // send all form data
+                    success: function (response) {
+                        if (response.info) {
+                            $('#EditModal').modal('hide');
+                            toastr.success("Designation updated successfully!");
+                            window.location.reload();
+                        } else {
+                            $('#EditModal').modal('hide');
+                            toastr.error(response.message || "Something went wrong!");
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.error("Error occurred: " + xhr.responseText);
+                    }
+                });
+            });
+
+        });
+    </script>
+}

@@ -7,7 +7,7 @@
    "MinimumProductVersion": "2.6.1186",
    "ModelNamespace": null,
    "OutputContextPath": null,
-   "OutputPath": "Models\/VM_Model\/",
+   "OutputPath": "Models\/ModelClass\/",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "Bhomes_ERP",
    "Schemas": null,
@@ -16,19 +16,7 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[HR_Designation]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[HR_EmpEducationType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[HR_EmployeeType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[HR_Shift]",
+         "Name": "[dbo].[HR_SalaryMatrix]",
          "ObjectType": 0
       }
    ],

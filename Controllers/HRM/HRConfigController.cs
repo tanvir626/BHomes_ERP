@@ -301,5 +301,32 @@ namespace Bhomes_ERP.Controllers.HRM
             return RedirectToAction("Error500");
         }
         #endregion
+
+        #region Salary Matrix
+        private readonly string TableSalaryMatrix = "HR_SalaryMatrix";
+        [Route("/HRConfig/Salary Matrix")]
+        public IActionResult SalaryMatrix()
+        {
+            ViewBag.Data = con.ShowTable(TableSalaryMatrix);
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update_SalaryMatrix(VM_SalaryMatrix model)
+        {
+            try
+            {
+                bool status = hr.Update_to_HR_SalaryMatrix(model);
+                return Json(new { info = status });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return RedirectToAction("Error500");
+        }
+        
+        #endregion
     }
 }
