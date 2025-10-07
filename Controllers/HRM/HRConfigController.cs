@@ -211,5 +211,50 @@ namespace Bhomes_ERP.Controllers.HRM
             return RedirectToAction("Error500");
         }
         #endregion
+
+        #region EMployee Type
+        private readonly string TableEmployeeType = "HR_EmployeeType";
+        [Route("/HRConfig/Employee Type")]
+        public IActionResult EmployeeType()
+        {
+            ViewBag.Data = con.ShowTable(TableEmployeeType);
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create_EmployeeType(VM_EmployeeType model)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(model.EmpTypeId.ToString()))
+                {
+                    bool status = hr.Save_to_HR_EmployeeType(model);
+                    return Json(new { info = status });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return RedirectToAction("Error500");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update_EmployeeType(VM_EmployeeType model)
+        {
+            try
+            {
+                bool status = hr.Update_to_HR_EmployeeType(model);
+                return Json(new { info = status });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return RedirectToAction("Error500");
+        }
+        #endregion
     }
 }

@@ -255,7 +255,6 @@ namespace Bhomes_ERP.Repository.Implementation
 
         #endregion
 
-
         #region Shift
         public bool Save_to_HR_Shift(VM_Shift model)
         {
@@ -445,6 +444,88 @@ namespace Bhomes_ERP.Repository.Implementation
         }
         #endregion
 
+        #region EmployeeType
+        public bool Save_to_HR_EmployeeType(VM_EmployeeType model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    string sql = @"
+                                    INSERT INTO [CoreDB].[dbo].[HR_EmployeeType]
+                                    (
+                                        EmployeeType,
+                                        Status,
+                                        CreatedBy,
+                                        CreateDate,
+                                        EditedBy
+                                    )
+                                    SELECT 
+                                        @EmployeeType,
+                                        @Status,
+                                        @CreatedBy,
+                                        @CreateDate,
+                                        @EditedBy
+                                    WHERE NOT EXISTS (
+                                        SELECT 1
+                                        FROM [CoreDB].[dbo].[HR_EmployeeType]
+                                        WHERE  EmployeeType =  @EmployeeType
+                                    );";
 
+
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        model.EmployeeType,
+                        Status = "Y",                        
+                        CreatedBy = con.GetLoggedUserName(),
+                        CreateDate = DateTime.Now,
+                        EditedBy = "Fresh",
+                        model.EmpTypeId
+
+                    });
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public bool Update_to_HR_EmployeeType(VM_EmployeeType model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(con.Dappercon()))
+                {
+                    string sql = @"
+                                    UPDATE [CoreDB].[dbo].[HR_EmployeeType]
+                                    SET                                        
+                                        Status = @Status,
+                                        EditedBy = @EditedBy,
+                                        EditDate = @EditDate
+                                        where EmpTypeID=@EmpTypeID;
+                                ";
+                    // Dapper parameter binding
+                    var rowsAffected = connection.Execute(sql, new
+                    {
+                        Status = status(model.Status),
+                        EditedBy = con.GetLoggedUserName(),
+                        EditDate = DateTime.Now,
+                        model.EmpTypeId
+                    });
+                    if (rowsAffected > 0)
+                        return true;
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        #endregion
     }
 }

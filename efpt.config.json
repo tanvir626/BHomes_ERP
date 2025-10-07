@@ -20,6 +20,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[HR_EmployeeType]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[HR_Shift]",
          "ObjectType": 0
       }

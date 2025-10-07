@@ -2,7 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Bhomes_ERP.Models.VM_Model;
 
@@ -10,19 +9,17 @@ public partial class VM_Designation
 {
     public int DesigId { get; set; }
 
-    [Required]
     public string DesignationTitle { get; set; }
 
     public int? DesignationLevel { get; set; }
 
-    [Required]
     public string Status { get; set; }
 
     public DateTime CreateDate { get; set; }
 
     public DateTime? EditDate { get; set; }
 
-    public DateTime? CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 
-    public DateTime? EditedBy { get; set; }
+    public string EditedBy { get; set; }
 }
